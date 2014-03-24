@@ -26,7 +26,7 @@ InfoBeforeFile=C:\Users\svend_000\windows-installer\LICENSE
 OutputBaseFilename=boot2docker-install
 Compression=lzma
 SolidCompression=yes
-WizardImageFile=logo-docker_transparent.bmp
+WizardImageFile=logo-docker-side.bmp
 WizardSmallImageFile=logo-docker-small.bmp
 
 [Languages]
