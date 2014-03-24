@@ -8,8 +8,8 @@ MSYS base system and git to your 64-bit Microsoft Windows system.
 Why InnoSetup
 -------------
 
-I've chosen to make a simple installer using (innosetup)<http://www.jrsoftware.org/>
-because that is what the (msysGit)<http://git-scm.org> installer is built with.
+I've chosen to make a simple installer using [innosetup](http://www.jrsoftware.org/)
+because that is what the [msysGit](http://git-scm.org) installer is built with.
 
 (It also happens that I've used InnoSetup before, so I can make something faster.
 
