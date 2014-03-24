@@ -18,13 +18,16 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName=Boot 2 Docker
-LicenseFile=C:\Users\svend_000\windows-installer\LICENSE
+InfoBeforeFile=C:\Users\svend_000\windows-installer\LICENSE
 OutputBaseFilename=boot2docker-install
 Compression=lzma
 SolidCompression=yes
 WizardImageFile=logo-docker_transparent.bmp
+WizardSmallImageFile=logo-docker_transparent.bmp
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -33,6 +36,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "C:\Users\svend_000\windows-installer\Boot2Docker\boot2docker.iso"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\svend_000\windows-installer\Boot2Docker\boot2docker-cli.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\svend_000\windows-installer\Boot2Docker\profile"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\svend_000\windows-installer\Boot2Docker\start.sh"; DestDir: "{app}"; Flags: ignoreversion
 
 ; msys-Git
 Source: "C:\Users\svend_000\windows-installer\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -47,9 +51,11 @@ Source: "C:\Users\svend_000\windows-installer\VirtualBox\common.cab"; DestDir: "
 [Icons]
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{group}\Boot2Docker Console"; Filename: "C:\Program Files (x86)\Git\bin\sh.exe"; Parameters: "--login -i"
+Name: "{group}\Boot2Docker"; Filename: "C:\Program Files (x86)\Git\bin\sh.exe"; Parameters: "--login -i -c {app}\start.sh"
+Name: "{group}\Boot2Docker Shell"; Filename: "C:\Program Files (x86)\Git\bin\sh.exe"; Parameters: "--login -i"
 
 [Run]
 ; http://unattended.sourceforge.net/installers.php
-Description: "Install MSYS-git UNIX-like environment (Required)"; Filename: "{app}\Git-1.9.0-preview20140217.exe"; Parameters: "/sp- /silent /norestart"; Flags: postinstall
-Description: "Install VirtualBox virtualisation (Required)"; Filename: "msiexec"; Parameters: "/i {app}\VirtualBox-4.3.8-r92456-MultiArch_amd64.msi"; Flags: postinstall
+Description: "Install MSYS-git UNIX-like environment (Required)"; Filename: "{app}\Git-1.9.0-preview20140217.exe"; Flags: postinstall
+; Parameters: "/sp- /silent /norestart"
+Description: "Install VirtualBox virtualisation (Required)"; Filename: "msiexec"; Parameters: "/i ""{app}\VirtualBox-4.3.8-r92456-MultiArch_amd64.msi"""; Flags: postinstall
