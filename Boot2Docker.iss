@@ -53,7 +53,7 @@ Source: "C:\Users\svend_000\windows-installer\VirtualBox\common.cab"; DestDir: "
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{group}\Boot2Docker Shell"; WorkingDir: "{app}"; Filename: "{app}\start.sh"
-Name: "{group}\Boot2Docker Delete"; WorkingDir: "{app}"; Filename: "{app}\stop.sh"
+Name: "{group}\Boot2Docker Delete"; WorkingDir: "{app}"; Filename: "{app}\delete.sh"
 Name: "{group}\MSYS Bash"; Filename: "C:\Program Files (x86)\Git\bin\sh.exe"; Parameters: "--login -i"; Flags: dontcloseonexit
 
 [Run]
