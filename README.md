@@ -4,7 +4,7 @@ windows-installer
 This installer adds VirtualBox, the Boot2Docker iso and management script and the
 MSYS base system and git to your 64-bit Microsoft Windows system.
 
-[Boot2Docker on windows demo](https://github.com/boot2docker/windows-installer/raw/master/Windows-demo.gif)
+![Boot2Docker on windows demo](https://github.com/boot2docker/windows-installer/raw/master/Windows-demo.gif)
 
 Why InnoSetup
 -------------
