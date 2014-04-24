@@ -47,7 +47,7 @@ Source: "C:\Users\svend_000\windows-installer\msys-Git\Git-1.9.0-preview20140217
 
 ;VirtualBox - 64 bit only
 ;https://forums.virtualbox.org/viewtopic.php?f=3&t=21127
-Source: "C:\Users\svend_000\windows-installer\VirtualBox\VirtualBox-4.3.8-r92456-MultiArch_amd64.msi"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\svend_000\windows-installer\VirtualBox\VirtualBox-4.3.10-93012-MultiArch_amd64.msi"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\svend_000\windows-installer\VirtualBox\common.cab"; DestDir: "{app}"; Flags: ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -63,7 +63,7 @@ Name: "{group}\MSYS Bash"; Filename: "C:\Program Files (x86)\Git\bin\sh.exe"; Pa
 ; http://unattended.sourceforge.net/installers.php
 Description: "Install MSYS-git UNIX-like environment (Required)"; Filename: "{app}\Git-1.9.0-preview20140217.exe"; Flags: postinstall
 ; Parameters: "/sp- /silent /norestart"
-Description: "Install VirtualBox virtualisation (Required)"; Filename: "msiexec"; Parameters: "/i ""{app}\VirtualBox-4.3.8-r92456-MultiArch_amd64.msi"""; Flags: postinstall
+Description: "Install VirtualBox virtualisation (Required)"; Filename: "msiexec"; Parameters: "/i ""{app}\VirtualBox-4.3.10-93012-MultiArch_amd64.msi"""; Flags: postinstall
 
 [UninstallRun]
 Filename: "{app}\delete.sh"
