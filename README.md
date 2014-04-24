@@ -1,13 +1,20 @@
-windows-installer
-=================
+# windows-installer
 
 This installer adds VirtualBox, the Boot2Docker iso and management script, the
 MSYS base system and git to your 64-bit Microsoft Windows system. [Download here](https://github.com/boot2docker/windows-installer/releases)
 
 ![Boot2Docker on windows demo](https://github.com/boot2docker/windows-installer/raw/master/Windows-demo.gif)
 
-Why InnoSetup
--------------
+## What is included:
+
+- [msys-git 1.9.0](http://msysgit.github.io/) for tools like `OpenSSH` and `BASH`
+- [VirtualBox 4.3.10](https://www.virtualbox.org)
+- [Boot2Docker-cli management tool v 0.8.1](https://github.com/boot2docker/boot2docker-cli)
+- [Boot2Docker ISO v0.8.1](https://github.com/boot2docker/boot2docker)
+
+(the ISO contains Docker v0.10.1 - unfortuanatly we don't have a windows Docker client yet)
+
+## Why InnoSetup
 
 I've chosen to make a simple installer using [innosetup](http://www.jrsoftware.org/)
 because that is what the [msysGit](http://git-scm.org) installer is built with.
