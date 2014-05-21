@@ -11,6 +11,8 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 SetupIconFile=boot2docker.ico
+DisableProgramGroupPage=yes
+DisableReadyPage=yes
 
 AppId={{05BD04E9-4AB5-46AC-891E-60EA8FD57D56}
 AppCopyright=Docker Project
@@ -51,14 +53,14 @@ Source: "C:\Users\svend_000\windows-installer\start.sh"; DestDir: "{app}"; Flags
 Source: "C:\Users\svend_000\windows-installer\delete.sh"; DestDir: "{app}"; Flags: ignoreversion
 
 ; msys-Git
-Source: "C:\Users\svend_000\windows-installer\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\svend_000\windows-installer\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; Flags: 
 
 ;VirtualBox - 64 bit only
 ;https://forums.virtualbox.org/viewtopic.php?f=3&t=21127
-Source: "C:\Users\svend_000\windows-installer\VirtualBox\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\svend_000\windows-installer\VirtualBox\common.cab"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\svend_000\windows-installer\VirtualBox\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"; DestDir: "{app}"; Flags: 
+Source: "C:\Users\svend_000\windows-installer\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: VBoxInstalled()
 ; the cert http://www.catonrug.net/2013/03/virtualbox-silent-install-store-oracle-certificate.html
-Source: "C:\Users\svend_000\windows-installer\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\svend_000\windows-installer\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; AfterInstall: MSYSInstalled()
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -71,20 +73,83 @@ Name: "{commonprograms}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app
 Name: "{group}\Delete Boot2Docker VM"; WorkingDir: "{app}"; Filename: "{app}\delete.sh"
 Name: "{group}\Unix Bash"; Filename: "C:\Program Files (x86)\Git\bin\sh.exe"; Parameters: "--login -i"; Flags: dontcloseonexit
 
-[Run]
-; http://unattended.sourceforge.net/installers.php
-; sadly, the auto-checkbox Flag: postinstall also means that its run after the final b2d install screen, which is not what we want.
-; TODO: unwrap the msys-git installer and just include it into this one.
-Description: "Install MSYS-git UNIX-like environment (Required)"; StatusMsg: "Installing MSYS-git UNIX-like environment"; Filename: "{app}\Git-1.9.0-preview20140217.exe"; Parameters: "/sp- /verysilent /norestart"; Flags: runhidden
-StatusMsg: "Installing vbox cert"; Filename: "certutil"; Parameters: "-addstore ""TrustedPublisher"" oracle-vbox.cer"; Flags: runhidden
-Description: "Install VirtualBox virtualisation (Required)"; StatusMsg: "Installing VirtualBox virtualisation"; Filename: "msiexec"; Parameters: "/qn /i ""{app}\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"""; Flags:
-
 [UninstallRun]
 Filename: "{app}\delete.sh"
 
 [Code]
+var
+  restart: boolean;
+function NeedRestart(): Boolean;
+begin
+  Result := restart;
+end;
 
 procedure CurPageChanged(CurPageID: Integer);
 begin
     WizardForm.FinishedLabel.Caption := 'Docker for Windows installation completed.      The `Boot2Docker Start` icon on your desktop, and Program Files will initialise, start and connect you to your Boot2Docker virtual machine.';
+  if CurPageID = wpSelectDir then
+    // to go with DisableReadyPage=yes and DisableProgramGroupPage=yes
+    WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
+  else
+    WizardForm.NextButton.Caption := SetupMessage(msgButtonNext);
+  if CurPageID = wpFinished then 
+    WizardForm.NextButton.Caption := SetupMessage(msgButtonFinish)
+end;
+
+//;[Run]
+//; http://unattended.sourceforge.net/installers.php
+//; sadly, the auto-checkbox Flag: postinstall also means that its run after the final b2d install screen, which is not what we want.
+//; TODO: unwrap the msys-git installer and just include it into this one.
+//;Description: "Install MSYS-git UNIX-like environment (Required)"; StatusMsg: "Installing MSYS-git UNIX-like environment"; Filename: "{app}\Git-1.9.0-preview20140217.exe"; Parameters: "/sp- /verysilent /norestart"; Flags: runhidden; Check: MSYSInstalled()
+//;StatusMsg: "Installing vbox cert"; Filename: "certutil"; Parameters: "-addstore ""TrustedPublisher"" oracle-vbox.cer"; Flags: runhidden
+//;Description: "Install VirtualBox virtualisation (Required)"; StatusMsg: "Installing VirtualBox virtualisation"; Filename: "msiexec"; Parameters: "/qn /i ""{app}\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"""; Check: VBoxInstalled()
+
+
+procedure VBoxInstalled();
+var
+  ResultCode: Integer;
+begin
+  if GetEnv('VBOX_INSTALL_PATH') = '' then 
+  begin
+    //MsgBox('installing vbox', mbInformation, MB_OK);
+    WizardForm.FilenameLabel.Caption := 'installing VirtualBox'
+    if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"'), '', SW_HIDE,
+       ewWaitUntilTerminated, ResultCode) then
+    begin
+      // handle success if necessary; ResultCode contains the exit code
+      //MsgBox('vbox installed OK', mbInformation, MB_OK);
+    end
+    else begin
+      // handle failure if necessary; ResultCode contains the error code
+      MsgBox('vbox install failure', mbInformation, MB_OK);
+    end;
+    restart := True;
+  end else begin
+    //MsgBox('NOT installing vbox', mbInformation, MB_OK);
+  end;
+end;
+
+
+procedure MSYSInstalled();
+var
+  ResultCode: Integer;
+begin
+  if RegKeyExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1') then
+  begin
+    //MsgBox('NOT installing msys', mbInformation, MB_OK);
+  end 
+  else begin
+    //MsgBox('installing msys', mbInformation, MB_OK);
+    WizardForm.FilenameLabel.Caption := 'installing MSYS Git'
+    if Exec(ExpandConstant('{app}\Git-1.9.0-preview20140217.exe'), '/sp- /verysilent /norestart', '', SW_HIDE,
+       ewWaitUntilTerminated, ResultCode) then
+    begin
+      // handle success if necessary; ResultCode contains the exit code
+      //MsgBox('msys installed OK', mbInformation, MB_OK);
+    end
+    else begin
+      // handle failure if necessary; ResultCode contains the error code
+      MsgBox('msys install failure', mbInformation, MB_OK);
+    end;
+  end;
 end;
