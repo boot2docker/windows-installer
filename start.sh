@@ -1,8 +1,8 @@
 echo "initialising..."
-./boot2docker-cli.exe init
+./boot2docker.exe init
 echo "starting..."
-./boot2docker-cli.exe start
+./boot2docker.exe start
 echo "connecting... (password: tcuser)"
-./boot2docker-cli.exe ssh
+./boot2docker.exe ssh
 
 read

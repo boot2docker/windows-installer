@@ -1,7 +1,7 @@
 
 echo "stoping..."
-./boot2docker-cli.exe stop
+./boot2docker.exe stop
 echo "deleting..."
-./boot2docker-cli.exe delete
+./boot2docker.exe delete
 
 read
