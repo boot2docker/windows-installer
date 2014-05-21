@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Boot2Docker for Windows"
-#define MyAppVersion "0.3"
+#define MyAppVersion "0.9"
 #define MyAppPublisher "Boot2Docker"
 #define MyAppURL "http://boot2docker.io"
 
@@ -30,14 +30,14 @@ OutputBaseFilename=boot2docker-install
 Compression=lzma
 SolidCompression=yes
 WizardImageFile=logo-docker-side.bmp
-WizardSmallImageFile=logo-docker-small.bmp
+WizardSmallImageFile=logo-docker-small.bmp         
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: "C:\Users\svend_000\windows-installer\Boot2Docker\boot2docker.iso"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\svend_000\windows-installer\Boot2Docker\boot2docker-cli.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\svend_000\windows-installer\Boot2Docker\boot2docker.exe"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "C:\Users\svend_000\windows-installer\Boot2Docker\profile"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\svend_000\windows-installer\start.sh"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\svend_000\windows-installer\delete.sh"; DestDir: "{app}"; Flags: ignoreversion
