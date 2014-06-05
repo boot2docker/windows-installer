@@ -4,6 +4,7 @@ cd VirtualBox
 
 #http://www.virtualbox.org/manual/ch02.html
 #VirtualBox-4.3.10-93012-Win.exe -extract -silent -path .
+#VirtualBox-4.3.12-93733-Win -extract -silent -path .
 #http://www.catonrug.net/2013/03/virtualbox-silent-install-store-oracle-certificate.html
 
 cd ../Boot2Docker

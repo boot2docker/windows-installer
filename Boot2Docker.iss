@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Docker for Windows"
-#define MyAppVersion "0.9"
+#define MyAppVersion "0.12.0-pre1"
 #define MyAppPublisher "Docker Inc"
 #define MyAppURL "http://boot2docker.io"
 
@@ -11,8 +11,8 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 SetupIconFile=boot2docker.ico
-DisableProgramGroupPage=yes
-DisableReadyPage=yes
+;DisableProgramGroupPage=yes
+;DisableReadyPage=yes
 
 AppId={{05BD04E9-4AB5-46AC-891E-60EA8FD57D56}
 AppCopyright=Docker Project
@@ -30,7 +30,7 @@ ArchitecturesInstallIn64BitMode=x64
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName=Docker
 ; lets not be annoying
-;InfoBeforeFile=C:\Users\svend_000\windows-installer\LICENSE
+;InfoBeforeFile=.\LICENSE
 ;DisableFinishedPage
 ;InfoAfterFile=
 OutputBaseFilename=docker-install
@@ -41,26 +41,39 @@ WizardSmallImageFile=logo-docker-small.bmp
 WizardImageStretch=no     
 WizardImageBackColor=$325461
 
+SignTool=ksign /d $qDocker for Windows$q /du $qhttp://docker.com$q $f
+
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[Types]
+Name: "full"; Description: "Full installation"
+Name: "upgrade"; Description: "Upgrade Boot2Docker only"
+Name: "custom"; Description: "Custom installation"; Flags: iscustom
+
+
+[Components]
+Name: "Boot2Docker"; Description: "Boot2Docker management script and ISO" ; Types: full upgrade
+Name: "VirtualBox"; Description: "VirtualBox"; Types: full
+Name: "MSYS"; Description: "MSYS-git UNIX tools"; Types: full
+
 [Files]
-Source: "C:\Users\svend_000\windows-installer\Boot2Docker\boot2docker.iso"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\svend_000\windows-installer\boot2docker.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\svend_000\windows-installer\Boot2Docker\boot2docker.exe"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "C:\Users\svend_000\windows-installer\Boot2Docker\profile"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\svend_000\windows-installer\start.sh"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\svend_000\windows-installer\delete.sh"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\Boot2Docker\boot2docker.iso"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
+Source: ".\boot2docker.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
+Source: ".\Boot2Docker\boot2docker.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
+;Source: ".\Boot2Docker\profile"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\start.sh"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
+Source: ".\delete.sh"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
 
 ; msys-Git
-Source: "C:\Users\svend_000\windows-installer\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; Flags: 
+Source: ".\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; Components: "MSYS" 
 
 ;VirtualBox - 64 bit only
 ;https://forums.virtualbox.org/viewtopic.php?f=3&t=21127
-Source: "C:\Users\svend_000\windows-installer\VirtualBox\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"; DestDir: "{app}"; Flags: 
-Source: "C:\Users\svend_000\windows-installer\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: VBoxInstalled()
+Source: ".\VirtualBox\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi"; DestDir: "{app}"; Components: "VirtualBox"
+Source: ".\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: VBoxInstalled(); Components: "VirtualBox"
 ; the cert http://www.catonrug.net/2013/03/virtualbox-silent-install-store-oracle-certificate.html
-Source: "C:\Users\svend_000\windows-installer\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; AfterInstall: MSYSInstalled()
+Source: ".\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; AfterInstall: MSYSInstalled();  Components: "VirtualBox"
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -79,31 +92,59 @@ Filename: "{app}\delete.sh"
 [Code]
 var
   restart: boolean;
+const  UninstallKey = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#SetupSetting("AppId")}_is1';
+//  32 bit on 64  HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall
+
+function IsUpgrade: Boolean;
+var
+  Value: string;
+begin
+  Result := (RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Value) or
+    RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Value)) and (Value <> '');
+end;
+
+
 function NeedRestart(): Boolean;
 begin
   Result := restart;
 end;
 
+function NeedToInstallVirtualBox(): Boolean;
+begin
+  Result := False;
+  if GetEnv('VBOX_INSTALL_PATH') = '' then begin
+    Result := True;
+  end;
+end;
+
+function NeedToInstallMSYS(): Boolean;
+begin
+  Result := True;
+  if RegKeyExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1') then begin
+    Result := False;
+  end;
+end;
+
 procedure CurPageChanged(CurPageID: Integer);
 begin
     WizardForm.FinishedLabel.Caption := 'Docker for Windows installation completed.      The `Boot2Docker Start` icon on your desktop, and Program Files will initialise, start and connect you to your Boot2Docker virtual machine.';
-  if CurPageID = wpSelectDir then
+  //if CurPageID = wpSelectDir then
     // to go with DisableReadyPage=yes and DisableProgramGroupPage=yes
-    WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
-  else
-    WizardForm.NextButton.Caption := SetupMessage(msgButtonNext);
-  if CurPageID = wpFinished then 
-    WizardForm.NextButton.Caption := SetupMessage(msgButtonFinish)
+    //WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
+  //else
+    //WizardForm.NextButton.Caption := SetupMessage(msgButtonNext);
+  //if CurPageID = wpFinished then 
+    //WizardForm.NextButton.Caption := SetupMessage(msgButtonFinish)
+    if CurPageID = wpSelectComponents then
+    begin  
+      if IsUpgrade() then
+      begin
+        Wizardform.TypesCombo.ItemIndex := 2
+      end;
+      Wizardform.ComponentsList.Checked[1] := NeedToInstallVirtualBox();
+      Wizardform.ComponentsList.Checked[2] := NeedToInstallMSYS();
+    end;
 end;
-
-//;[Run]
-//; http://unattended.sourceforge.net/installers.php
-//; sadly, the auto-checkbox Flag: postinstall also means that its run after the final b2d install screen, which is not what we want.
-//; TODO: unwrap the msys-git installer and just include it into this one.
-//;Description: "Install MSYS-git UNIX-like environment (Required)"; StatusMsg: "Installing MSYS-git UNIX-like environment"; Filename: "{app}\Git-1.9.0-preview20140217.exe"; Parameters: "/sp- /verysilent /norestart"; Flags: runhidden; Check: MSYSInstalled()
-//;StatusMsg: "Installing vbox cert"; Filename: "certutil"; Parameters: "-addstore ""TrustedPublisher"" oracle-vbox.cer"; Flags: runhidden
-//;Description: "Install VirtualBox virtualisation (Required)"; StatusMsg: "Installing VirtualBox virtualisation"; Filename: "msiexec"; Parameters: "/qn /i ""{app}\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"""; Check: VBoxInstalled()
-
 
 procedure VBoxInstalled();
 var
@@ -113,7 +154,7 @@ begin
   begin
     //MsgBox('installing vbox', mbInformation, MB_OK);
     WizardForm.FilenameLabel.Caption := 'installing VirtualBox'
-    if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\VirtualBox-4.3.10-r93012-MultiArch_amd64.msi"'), '', SW_HIDE,
+    if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi"'), '', SW_HIDE,
        ewWaitUntilTerminated, ResultCode) then
     begin
       // handle success if necessary; ResultCode contains the exit code
@@ -128,6 +169,7 @@ begin
     //MsgBox('NOT installing vbox', mbInformation, MB_OK);
   end;
 end;
+
 
 
 procedure MSYSInstalled();
