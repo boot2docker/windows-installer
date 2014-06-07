@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Docker for Windows"
-#define MyAppVersion "0.12.0-pre1"
+#define MyAppVersion "0.12.0"
 #define MyAppPublisher "Docker Inc"
 #define MyAppURL "http://boot2docker.io"
 
@@ -73,7 +73,7 @@ Source: ".\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; Components
 Source: ".\VirtualBox\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi"; DestDir: "{app}"; Components: "VirtualBox"
 Source: ".\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: VBoxInstalled(); Components: "VirtualBox"
 ; the cert http://www.catonrug.net/2013/03/virtualbox-silent-install-store-oracle-certificate.html
-Source: ".\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; AfterInstall: MSYSInstalled();  Components: "VirtualBox"
+;Source: ".\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; AfterInstall: MSYSInstalled();  Components: "VirtualBox"
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
