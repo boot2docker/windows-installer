@@ -66,12 +66,12 @@ Source: ".\start.sh"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2
 Source: ".\delete.sh"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
 
 ; msys-Git
-Source: ".\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; Components: "MSYS" 
+Source: ".\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; AfterInstall: RunInstallMSYS();  Components: "MSYS" 
 
 ;VirtualBox - 64 bit only
 ;https://forums.virtualbox.org/viewtopic.php?f=3&t=21127
 Source: ".\VirtualBox\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi"; DestDir: "{app}"; Components: "VirtualBox"
-Source: ".\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: VBoxInstalled(); Components: "VirtualBox"
+Source: ".\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: RunInstallVirtualBox(); Components: "VirtualBox"
 ; the cert http://www.catonrug.net/2013/03/virtualbox-silent-install-store-oracle-certificate.html
 ;Source: ".\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; AfterInstall: MSYSInstalled();  Components: "VirtualBox"
 
@@ -146,12 +146,10 @@ begin
     end;
 end;
 
-procedure VBoxInstalled();
+procedure RunInstallVirtualBox();
 var
   ResultCode: Integer;
 begin
-  if GetEnv('VBOX_INSTALL_PATH') = '' then 
-  begin
     //MsgBox('installing vbox', mbInformation, MB_OK);
     WizardForm.FilenameLabel.Caption := 'installing VirtualBox'
     if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi"'), '', SW_HIDE,
@@ -165,23 +163,14 @@ begin
       MsgBox('vbox install failure', mbInformation, MB_OK);
     end;
     restart := True;
-  end else begin
-    //MsgBox('NOT installing vbox', mbInformation, MB_OK);
-  end;
 end;
 
 
 
-procedure MSYSInstalled();
+procedure RunInstallMSYS();
 var
   ResultCode: Integer;
 begin
-  if RegKeyExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1') then
-  begin
-    //MsgBox('NOT installing msys', mbInformation, MB_OK);
-  end 
-  else begin
-    //MsgBox('installing msys', mbInformation, MB_OK);
     WizardForm.FilenameLabel.Caption := 'installing MSYS Git'
     if Exec(ExpandConstant('{app}\Git-1.9.0-preview20140217.exe'), '/sp- /verysilent /norestart', '', SW_HIDE,
        ewWaitUntilTerminated, ResultCode) then
@@ -193,5 +182,4 @@ begin
       // handle failure if necessary; ResultCode contains the error code
       MsgBox('msys install failure', mbInformation, MB_OK);
     end;
-  end;
 end;
