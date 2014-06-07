@@ -112,7 +112,7 @@ end;
 function NeedToInstallVirtualBox(): Boolean;
 begin
   Result := False;
-  if GetEnv('VBOX_INSTALL_PATH') = '' then begin
+  if (GetEnv('VBOX_INSTALL_PATH') = '') and (GetEnv('VBOX_MSI_INSTALL_PATH') = '') then begin
     Result := True;
   end;
 end;
