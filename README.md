@@ -1,9 +1,6 @@
 # windows-installer
 
-This installer adds VirtualBox, the Boot2Docker iso and management script, the
-MSYS base system and git to your 64-bit Microsoft Windows system. [Download here](https://github.com/boot2docker/windows-installer/releases)
-
-![Boot2Docker on windows demo](https://github.com/boot2docker/windows-installer/raw/master/Windows-demo.gif)
+Installation [instructions](http://docs.docker.io/installation/windows/) available on the Docker documentation site.
 
 ## What is included:
 
