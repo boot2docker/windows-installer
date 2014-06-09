@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Boot2Docker for Windows"
-#define MyAppVersion "0.12.0"
+#define MyAppVersion "1.0.0"
 #define MyAppPublisher "Docker Inc"
 #define MyAppURL "http://boot2docker.io"
 
