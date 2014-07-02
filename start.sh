@@ -1,6 +1,8 @@
 #!sh
 ISO="$USERPROFILE/.boot2docker/boot2docker.iso"
 
+cd $(dirname $0)
+
 if [ ! -e "$ISO" ]; then
 	echo "copying initial boot2docker.iso (run 'boot2docker.exe download' to update"
 	mkdir -p "$USERPROFILE/.boot2docker"
