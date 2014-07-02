@@ -127,7 +127,7 @@ end;
 
 procedure CurPageChanged(CurPageID: Integer);
 begin
-    WizardForm.FinishedLabel.Caption := 'Docker for Windows installation completed.      The `Boot2Docker Start` icon on your desktop, and Program Files will initialise, start and connect you to your Boot2Docker virtual machine.';
+    WizardForm.FinishedLabel.Caption := 'Docker for Windows installation completed.      The `Boot2Docker Start` icon on your desktop and in Program Files will initialize, start and connect you to your Boot2Docker virtual machine.';
   //if CurPageID = wpSelectDir then
     // to go with DisableReadyPage=yes and DisableProgramGroupPage=yes
     //WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
