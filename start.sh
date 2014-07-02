@@ -7,7 +7,7 @@ if [ ! -e "$ISO" ]; then
 	cp boot2docker.iso "$ISO"
 fi
 
-echo "initialising..."
+echo "initializing..."
 ./boot2docker.exe init
 echo "starting..."
 ./boot2docker.exe start
