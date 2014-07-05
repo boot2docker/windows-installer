@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Boot2Docker for Windows"
-#define MyAppVersion "1.0.1"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "Docker Inc"
 #define MyAppURL "http://boot2docker.io"
 
@@ -43,6 +43,9 @@ WizardImageBackColor=$325461
 
 SignTool=ksign /d $qBoot2Docker for Windows$q /du $qhttp://docker.com$q $f
 
+; for modpath.iss
+ChangesEnvironment=true
+
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
@@ -51,6 +54,8 @@ Name: "full"; Description: "Full installation"
 Name: "upgrade"; Description: "Upgrade Boot2Docker only"
 Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
+[Tasks]
+Name: modifypath; Description: &Add Boot2Docker environmental PATH; Flags: checked
 
 [Components]
 Name: "Boot2Docker"; Description: "Boot2Docker management script and ISO" ; Types: full upgrade
@@ -183,3 +188,14 @@ begin
       MsgBox('msys install failure', mbInformation, MB_OK);
     end;
 end;
+
+const
+	ModPathName = 'modifypath';
+	ModPathType = 'user';
+
+function ModPathDir(): TArrayOfString;
+begin
+	setArrayLength(Result, 1);
+	Result[0] := ExpandConstant('{app}');
+end;
+#include "modpath.iss"
