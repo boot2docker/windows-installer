@@ -55,7 +55,7 @@ Name: "upgrade"; Description: "Upgrade Boot2Docker only"
 Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Tasks]
-Name: modifypath; Description: &Add Boot2Docker environmental PATH; Flags: checked
+Name: modifypath; Description: &Add Boot2Docker environmental PATH; Flags: 
 
 [Components]
 Name: "Boot2Docker"; Description: "Boot2Docker management script and ISO" ; Types: full upgrade
