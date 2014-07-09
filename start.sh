@@ -1,8 +1,10 @@
 #!sh
 
 # simplify by adding the program dir to the path
-B2DPATH=$(dirname $0)
-set PATH=%PATH%;$B2DPATH
+B2DPATH=$(echo "$0" | tr '\\' '/')
+B2DPATH=${B2DPATH%/*}
+echo "B2DPATH=$B2DPATH"
+PATH="$B2DPATH:$PATH"
 
 ISO="$USERPROFILE/.boot2docker/boot2docker.iso"
 
