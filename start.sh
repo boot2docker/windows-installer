@@ -1,9 +1,12 @@
-#!sh
+#!/bin/bash.exe
 
-# simplify by adding the program dir to the path
-B2DPATH=$(echo "$0" | tr '\\' '/')
+# convert backslash paths to forward slash (yes, really, sometimes you get either)
+B2DPATH=${0//\\/\//}
+# remove the script-name
 B2DPATH=${B2DPATH%/*}
-echo "B2DPATH=$B2DPATH"
+# convert any C:/ into /c/ as MSYS needs this form
+B2DPATH=${B2DPATH//C:\//\/c/}
+# simplify by adding the program dir to the path
 PATH="$B2DPATH:$PATH"
 
 ISO="$USERPROFILE/.boot2docker/boot2docker.iso"
