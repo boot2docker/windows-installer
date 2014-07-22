@@ -157,7 +157,7 @@ var
 begin
     //MsgBox('installing vbox', mbInformation, MB_OK);
     WizardForm.FilenameLabel.Caption := 'installing VirtualBox'
-    if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi"'), '', SW_HIDE,
+    if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi" /norestart'), '', SW_HIDE,
        ewWaitUntilTerminated, ResultCode) then
     begin
       // handle success if necessary; ResultCode contains the exit code
