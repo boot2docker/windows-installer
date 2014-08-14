@@ -89,7 +89,6 @@ Name: "{group}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app}\start.s
 Name: "{commondesktop}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app}\start.sh"; IconFilename: "{app}/boot2docker.ico"
 Name: "{commonprograms}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app}\start.sh"; IconFilename: "{app}/boot2docker.ico"
 Name: "{group}\Delete Boot2Docker VM"; WorkingDir: "{app}"; Filename: "{app}\delete.sh"
-Name: "{group}\Unix Bash"; Filename: "C:\Program Files (x86)\Git\bin\sh.exe"; Parameters: "--login -i"; Flags: dontcloseonexit
 
 [UninstallRun]
 Filename: "{app}\delete.sh"
