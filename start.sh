@@ -1,5 +1,5 @@
 #!/bin/bash.exe
-
+clear
 # convert backslash paths to forward slash (yes, really, sometimes you get either)
 B2DPATH=${0//\\/\//}
 # remove the script-name
