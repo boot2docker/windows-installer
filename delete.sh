@@ -1,5 +1,5 @@
 #!sh
-
+clear
 # simplify by adding the program dir to the path
 B2DPATH=$(dirname $0)
 set PATH=%PATH%;$B2DPATH
