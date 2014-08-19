@@ -96,8 +96,13 @@ Filename: "{app}\delete.sh"
 [Code]
 var
   restart: boolean;
-const  UninstallKey = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#SetupSetting("AppId")}_is1';
+// http://stackoverflow.com/questions/9238698/show-licenseagreement-link-in-innosetup-while-installation
+  DockerInstallDocs: TLabel;
+
+const
+  UninstallKey = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#SetupSetting("AppId")}_is1';
 //  32 bit on 64  HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall
+
 
 function IsUpgrade: Boolean;
 var
@@ -129,9 +134,50 @@ begin
   end;
 end;
 
+procedure DocLinkClick(Sender: TObject);
+var
+  ErrorCode: Integer;
+begin
+  ShellExec('', 'http://docs.docker.com/installation/windows/', '', '', SW_SHOW, ewNoWait, ErrorCode);
+end;
+
+procedure InitializeWizard;
+begin
+  DockerInstallDocs := TLabel.Create(WizardForm);
+  DockerInstallDocs.Parent := WizardForm;
+  DockerInstallDocs.Left := 8;
+  DockerInstallDocs.Top := WizardForm.ClientHeight - DockerInstallDocs.ClientHeight - 8;
+  DockerInstallDocs.Cursor := crHand;
+  DockerInstallDocs.Font.Color := clBlue;
+  DockerInstallDocs.Font.Style := [fsUnderline];
+  DockerInstallDocs.Caption := 'Docker Windows installation documentation';
+  DockerInstallDocs.OnClick := @DocLinkClick;
+end;
+
 procedure CurPageChanged(CurPageID: Integer);
 begin
-    WizardForm.FinishedLabel.Caption := 'Docker for Windows installation completed.      The `Boot2Docker Start` icon on your desktop and in Program Files will initialize, start and connect you to your Boot2Docker virtual machine.';
+    DockerInstallDocs.Visible := True;
+
+    WizardForm.FinishedLabel.AutoSize := True;
+    WizardForm.FinishedLabel.Caption := 'Docker for Windows installation completed.' + \
+        #13#10 + \
+        #13#10 + \
+        'Run using the `Boot2Docker Start` icon on your desktop or in [Program Files] - then start a test container with:' + \
+        #13#10 + \
+	'         `docker run hello-world`' + \
+        #13#10 + \
+        #13#10 + \
+	// TODO: it seems making hyperlinks is hard :/
+	//'To save and share container images, automate workflows, and more sign-up for a free <a href="http://hub.docker.com/?utm_source=b2d&utm_medium=installer&utm_term=summary&utm_content=windows&utm_campaign=product">Docker Hub account</a>.' + \
+        #13#10 + \
+        #13#10 +
+	'You can upgrade your existing Boot2Docker VM without data loss by running:' + \
+        #13#10 + \
+	'         `boot2docker upgrade`' + \
+        #13#10 + \
+        #13#10 + \
+	'For further information, please see the Docker Windows installation documentation link.'
+	;
   //if CurPageID = wpSelectDir then
     // to go with DisableReadyPage=yes and DisableProgramGroupPage=yes
     //WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
