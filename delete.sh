@@ -9,4 +9,6 @@ boot2docker.exe stop
 echo "deleting..."
 boot2docker.exe delete
 
+echo
+echo "[Hit a key to exit]"
 read

@@ -24,4 +24,6 @@ boot2docker.exe start
 echo "connecting..."
 boot2docker.exe ssh
 
+echo
+echo "[Hit a key to exit]"
 read
