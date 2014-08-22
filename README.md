@@ -5,11 +5,11 @@ Installation [instructions](http://docs.docker.io/installation/windows/) availab
 ## What is included:
 
 - [msys-git 1.9.0](http://msysgit.github.io/) for tools like `OpenSSH` and `BASH`
-- [VirtualBox 4.3.10](https://www.virtualbox.org)
-- [Boot2Docker-cli management tool v 0.9.2](https://github.com/boot2docker/boot2docker-cli)
-- [Boot2Docker ISO v0.9.1](https://github.com/boot2docker/boot2docker)
+- [VirtualBox 4.3.12](https://www.virtualbox.org)
+- [Boot2Docker-cli management tool 1.2.0](https://github.com/boot2docker/boot2docker-cli)
+- [Boot2Docker ISO 1.2.0](https://github.com/boot2docker/boot2docker)
 
-(the ISO contains Docker v0.11.1 - unfortuanatly we don't have a windows Docker client yet)
+(the ISO contains Docker 1.2.0 - unfortunately we don't have a windows Docker client yet)
 
 ## Why InnoSetup
 
