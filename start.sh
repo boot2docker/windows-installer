@@ -5,9 +5,7 @@ B2DPATH=${0//\\/\//}
 # remove the script-name
 B2DPATH=${B2DPATH%/*}
 # convert any C:/ into /c/ as MSYS needs this form
-echo "before: $B2DPATH"
 B2DPATH=$(echo $B2DPATH | sed 's/^\([A-Z]\):/\/\L\1/')
-echo "after: $B2DPATH"
 # simplify by adding the program dir to the path
 PATH="$B2DPATH:$PATH"
 
