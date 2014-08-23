@@ -56,9 +56,10 @@ Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Tasks]
 Name: modifypath; Description: &Add Boot2Docker environmental PATH; Flags: 
+Name: rebootwindows; Description: &Reboot Windows at the end of installation; Flags: restart unchecked
 
 [Components]
-Name: "Boot2Docker"; Description: "Boot2Docker management script and ISO" ; Types: full upgrade
+Name: "Boot2Docker"; Description: "Boot2Docker management tool and ISO" ; Types: full upgrade
 Name: "VirtualBox"; Description: "VirtualBox"; Types: full
 Name: "MSYS"; Description: "MSYS-git UNIX tools"; Types: full
 
@@ -212,7 +213,7 @@ begin
       // handle failure if necessary; ResultCode contains the error code
       MsgBox('vbox install failure', mbInformation, MB_OK);
     end;
-    restart := True;
+    //restart := True;
 end;
 
 
