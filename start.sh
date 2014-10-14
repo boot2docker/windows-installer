@@ -1,29 +1,31 @@
-#!/bin/bash.exe
-clear
-# convert backslash paths to forward slash (yes, really, sometimes you get either)
-B2DPATH=${0//\\/\//}
-# remove the script-name
-B2DPATH=${B2DPATH%/*}
-# convert any C:/ into /c/ as MSYS needs this form
-B2DPATH=$(echo $B2DPATH | sed 's/^\([A-Z]\):/\/\L\1/')
-# simplify by adding the program dir to the path
-PATH="$B2DPATH:$PATH"
+#!/bin/bash
+set -e
 
-ISO="$USERPROFILE/.boot2docker/boot2docker.iso"
+# clear the MSYS MOTD
+clear
+
+cd "$(dirname "$BASH_SOURCE")"
+
+ISO="$HOME/.boot2docker/boot2docker.iso"
 
 if [ ! -e "$ISO" ]; then
-	echo "copying initial boot2docker.iso (run 'boot2docker.exe download' to update"
-	mkdir -p "$USERPROFILE/.boot2docker"
-	cp "$B2DPATH/boot2docker.iso" "$ISO"
+	echo 'copying initial boot2docker.iso (run "boot2docker.exe download" to update)'
+	mkdir -p "$(dirname "$ISO")"
+	cp ./boot2docker.iso "$ISO"
 fi
 
-echo "initializing..."
-boot2docker.exe init
-echo "starting..."
-boot2docker.exe start
-echo "connecting..."
-boot2docker.exe ssh
+echo 'initializing...'
+./boot2docker.exe init
+echo
+
+echo 'starting...'
+./boot2docker.exe start
+echo
+
+echo 'connecting...'
+./boot2docker.exe ssh
+echo
 
 echo
-echo "[Hit a key to exit]"
+echo '[Press any key to exit]'
 read
