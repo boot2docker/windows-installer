@@ -2,22 +2,31 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Boot2Docker for Windows"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "1.3.0"
 #define MyAppPublisher "Docker Inc"
-#define MyAppURL "http://boot2docker.io"
+#define MyAppURL "https://docker.com"
+#define MyAppContact "https://docs.docker.com"
+
+#define b2dIso ".\Boot2Docker\boot2docker.iso"
+#define b2dCli ".\Boot2Docker\boot2docker.exe"
+
+; https://msysgit.github.io
+; or https://github.com/msysgit/msysgit/releases/latest
+#define msysGit ".\msysGit\Git-1.9.4-preview20140929.exe"
+
+; https://www.virtualbox.org/wiki/Downloads
+; Then, run "VirtualBox-x.x.x-xxx-Win.exe --extract --path ."
+#define virtualBoxCommon ".\VirtualBox\common.cab"
+#define virtualBoxMsi ".\VirtualBox\VirtualBox-4.3.18-r96516-MultiArch_amd64.msi"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-SetupIconFile=boot2docker.ico
-;DisableProgramGroupPage=yes
-;DisableReadyPage=yes
-
 AppId={{05BD04E9-4AB5-46AC-891E-60EA8FD57D56}
-AppCopyright=Docker Project
-AppContact=Sven Dowideit <SvenDowideit@docker.com>
-AppComments=http://docker.com/
+AppCopyright={#MyAppPublisher}
+AppContact={#MyAppContact}
+AppComments={#MyAppURL}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -37,11 +46,16 @@ OutputBaseFilename=docker-install
 Compression=lzma
 SolidCompression=yes
 WizardImageFile=logo-docker-side.bmp
-WizardSmallImageFile=logo-docker-small.bmp  
-WizardImageStretch=no     
+WizardSmallImageFile=logo-docker-small.bmp
+WizardImageStretch=no
 WizardImageBackColor=$325461
 
-SignTool=ksign /d $qBoot2Docker for Windows$q /du $qhttp://docker.com$q $f
+; in the installer itself:
+SetupIconFile=boot2docker.ico
+; in the "Add/Remove" list:
+UninstallDisplayIcon={app}\boot2docker.ico
+
+SignTool=ksign /d $q{#MyAppName}$q /du $q{#MyAppURL}$q $f
 
 ; for modpath.iss
 ChangesEnvironment=true
@@ -55,8 +69,9 @@ Name: "upgrade"; Description: "Upgrade Boot2Docker only"
 Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Tasks]
-Name: modifypath; Description: &Add Boot2Docker environmental PATH; Flags: 
-Name: rebootwindows; Description: &Reboot Windows at the end of installation; Flags: restart unchecked
+Name: desktopicon; Description: "{cm:CreateDesktopIcon}"
+Name: modifypath; Description: "Add boot2docker.exe to &PATH"
+Name: rebootwindows; Description: "&Reboot Windows at the end of installation"; Flags: restart unchecked
 
 [Components]
 Name: "Boot2Docker"; Description: "Boot2Docker management tool and ISO" ; Types: full upgrade
@@ -64,22 +79,20 @@ Name: "VirtualBox"; Description: "VirtualBox"; Types: full
 Name: "MSYS"; Description: "MSYS-git UNIX tools"; Types: full
 
 [Files]
-Source: ".\Boot2Docker\boot2docker.iso"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
-Source: ".\boot2docker.ico"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
-Source: ".\Boot2Docker\boot2docker.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
-;Source: ".\Boot2Docker\profile"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\boot2docker.ico"; DestDir: "{app}"; Flags: ignoreversion
+
+; Boot2Docker
+Source: "{#b2dIso}"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
+Source: "{#b2dCli}"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
 Source: ".\start.sh"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
 Source: ".\delete.sh"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
 
 ; msys-Git
-Source: ".\msys-Git\Git-1.9.0-preview20140217.exe"; DestDir: "{app}"; AfterInstall: RunInstallMSYS();  Components: "MSYS" 
+Source: "{#msysGit}"; DestDir: "{app}\installers\msys-git"; DestName: "msys-git.exe"; AfterInstall: RunInstallMSYS();  Components: "MSYS"
 
-;VirtualBox - 64 bit only
-;https://forums.virtualbox.org/viewtopic.php?f=3&t=21127
-Source: ".\VirtualBox\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi"; DestDir: "{app}"; Components: "VirtualBox"
-Source: ".\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: RunInstallVirtualBox(); Components: "VirtualBox"
-; the cert http://www.catonrug.net/2013/03/virtualbox-silent-install-store-oracle-certificate.html
-;Source: ".\VirtualBox\oracle-vbox.cer"; DestDir: "{app}"; AfterInstall: MSYSInstalled();  Components: "VirtualBox"
+; VirtualBox
+Source: "{#virtualBoxCommon}"; DestDir: "{app}\installers\virtualbox"; Components: "VirtualBox"
+Source: "{#virtualBoxMsi}"; DestDir: "{app}\installers\virtualbox"; DestName: "virtualbox.msi"; AfterInstall: RunInstallVirtualBox(); Components: "VirtualBox"
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -87,7 +100,7 @@ Source: ".\VirtualBox\common.cab"; DestDir: "{app}"; AfterInstall: RunInstallVir
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{group}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app}\start.sh"; IconFilename: "{app}/boot2docker.ico"
-Name: "{commondesktop}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app}\start.sh"; IconFilename: "{app}/boot2docker.ico"
+Name: "{commondesktop}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app}\start.sh"; IconFilename: "{app}/boot2docker.ico"; Tasks: desktopicon
 Name: "{commonprograms}\Boot2Docker Start"; WorkingDir: "{app}"; Filename: "{app}\start.sh"; IconFilename: "{app}/boot2docker.ico"
 Name: "{group}\Delete Boot2Docker VM"; WorkingDir: "{app}"; Filename: "{app}\delete.sh"
 
@@ -96,143 +109,140 @@ Filename: "{app}\delete.sh"
 
 [Code]
 var
-  restart: boolean;
+	restart: boolean;
 // http://stackoverflow.com/questions/9238698/show-licenseagreement-link-in-innosetup-while-installation
-  DockerInstallDocs: TLabel;
+	DockerInstallDocs: TLabel;
 
 const
-  UninstallKey = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#SetupSetting("AppId")}_is1';
+	UninstallKey = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#SetupSetting("AppId")}_is1';
 //  32 bit on 64  HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall
 
 
 function IsUpgrade: Boolean;
 var
-  Value: string;
+	Value: string;
 begin
-  Result := (RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Value) or
-    RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Value)) and (Value <> '');
+	Result := (
+		RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Value)
+		or
+		RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Value)
+	) and (Value <> '');
 end;
 
 
 function NeedRestart(): Boolean;
 begin
-  Result := restart;
+	Result := restart;
 end;
 
 function NeedToInstallVirtualBox(): Boolean;
 begin
-  Result := False;
-  if (GetEnv('VBOX_INSTALL_PATH') = '') and (GetEnv('VBOX_MSI_INSTALL_PATH') = '') then begin
-    Result := True;
-  end;
+	Result := (
+		(GetEnv('VBOX_INSTALL_PATH') = '')
+		and
+		(GetEnv('VBOX_MSI_INSTALL_PATH') = '')
+	);
 end;
 
 function NeedToInstallMSYS(): Boolean;
 begin
-  Result := True;
-  if RegKeyExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1') then begin
-    Result := False;
-  end;
+	Result := not RegKeyExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1');
 end;
 
 procedure DocLinkClick(Sender: TObject);
 var
-  ErrorCode: Integer;
+	ErrorCode: Integer;
 begin
-  ShellExec('', 'http://docs.docker.com/installation/windows/', '', '', SW_SHOW, ewNoWait, ErrorCode);
+	ShellExec('', 'https://docs.docker.com/installation/windows/', '', '', SW_SHOW, ewNoWait, ErrorCode);
 end;
 
 procedure InitializeWizard;
 begin
-  DockerInstallDocs := TLabel.Create(WizardForm);
-  DockerInstallDocs.Parent := WizardForm;
-  DockerInstallDocs.Left := 8;
-  DockerInstallDocs.Top := WizardForm.ClientHeight - DockerInstallDocs.ClientHeight - 8;
-  DockerInstallDocs.Cursor := crHand;
-  DockerInstallDocs.Font.Color := clBlue;
-  DockerInstallDocs.Font.Style := [fsUnderline];
-  DockerInstallDocs.Caption := 'Docker Windows installation documentation';
-  DockerInstallDocs.OnClick := @DocLinkClick;
+	DockerInstallDocs := TLabel.Create(WizardForm);
+	DockerInstallDocs.Parent := WizardForm;
+	DockerInstallDocs.Left := 8;
+	DockerInstallDocs.Top := WizardForm.ClientHeight - DockerInstallDocs.ClientHeight - 8;
+	DockerInstallDocs.Cursor := crHand;
+	DockerInstallDocs.Font.Color := clBlue;
+	DockerInstallDocs.Font.Style := [fsUnderline];
+	DockerInstallDocs.Caption := '{#MyAppName} installation documentation';
+	DockerInstallDocs.OnClick := @DocLinkClick;
 end;
 
 procedure CurPageChanged(CurPageID: Integer);
 begin
-    DockerInstallDocs.Visible := True;
+	DockerInstallDocs.Visible := True;
 
-    WizardForm.FinishedLabel.AutoSize := True;
-    WizardForm.FinishedLabel.Caption := 'Docker for Windows installation completed.' + \
-        #13#10 + \
-        #13#10 + \
-        'Run using the `Boot2Docker Start` icon on your desktop or in [Program Files] - then start a test container with:' + \
-        #13#10 + \
-	'         `docker run hello-world`' + \
-        #13#10 + \
-        #13#10 + \
-	// TODO: it seems making hyperlinks is hard :/
-	//'To save and share container images, automate workflows, and more sign-up for a free <a href="http://hub.docker.com/?utm_source=b2d&utm_medium=installer&utm_term=summary&utm_content=windows&utm_campaign=product">Docker Hub account</a>.' + \
-        #13#10 + \
-        #13#10 +
-	'You can upgrade your existing Boot2Docker VM without data loss by running:' + \
-        #13#10 + \
-	'         `boot2docker upgrade`' + \
-        #13#10 + \
-        #13#10 + \
-	'For further information, please see the Docker Windows installation documentation link.'
+	WizardForm.FinishedLabel.AutoSize := True;
+	WizardForm.FinishedLabel.Caption :=
+		'{#MyAppName} installation completed.' + \
+		#13#10 + \
+		#13#10 + \
+		'Run using the `Boot2Docker Start` icon on your desktop or in [Program Files] - then start a test container with:' + \
+		#13#10 + \
+		'         `docker run hello-world`' + \
+		#13#10 + \
+		#13#10 + \
+		// TODO: it seems making hyperlinks is hard :/
+		//'To save and share container images, automate workflows, and more sign-up for a free <a href="http://hub.docker.com/?utm_source=b2d&utm_medium=installer&utm_term=summary&utm_content=windows&utm_campaign=product">Docker Hub account</a>.' + \
+		#13#10 + \
+		#13#10 +
+		'You can upgrade your existing Boot2Docker VM without data loss by running:' + \
+		#13#10 + \
+		'         `boot2docker upgrade`' + \
+		#13#10 + \
+		#13#10 + \
+		'For further information, please see the {#MyAppName} installation documentation link.'
 	;
-  //if CurPageID = wpSelectDir then
-    // to go with DisableReadyPage=yes and DisableProgramGroupPage=yes
-    //WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
-  //else
-    //WizardForm.NextButton.Caption := SetupMessage(msgButtonNext);
-  //if CurPageID = wpFinished then 
-    //WizardForm.NextButton.Caption := SetupMessage(msgButtonFinish)
-    if CurPageID = wpSelectComponents then
-    begin  
-      if IsUpgrade() then
-      begin
-        Wizardform.TypesCombo.ItemIndex := 2
-      end;
-      Wizardform.ComponentsList.Checked[1] := NeedToInstallVirtualBox();
-      Wizardform.ComponentsList.Checked[2] := NeedToInstallMSYS();
-    end;
+	//if CurPageID = wpSelectDir then
+		// to go with DisableReadyPage=yes and DisableProgramGroupPage=yes
+		//WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
+	//else
+		//WizardForm.NextButton.Caption := SetupMessage(msgButtonNext);
+	//if CurPageID = wpFinished then
+		//WizardForm.NextButton.Caption := SetupMessage(msgButtonFinish)
+		if CurPageID = wpSelectComponents then
+		begin
+			if IsUpgrade() then
+			begin
+				Wizardform.TypesCombo.ItemIndex := 2
+			end;
+			Wizardform.ComponentsList.Checked[1] := NeedToInstallVirtualBox();
+			Wizardform.ComponentsList.Checked[2] := NeedToInstallMSYS();
+		end;
 end;
 
 procedure RunInstallVirtualBox();
 var
-  ResultCode: Integer;
+	ResultCode: Integer;
 begin
-    //MsgBox('installing vbox', mbInformation, MB_OK);
-    WizardForm.FilenameLabel.Caption := 'installing VirtualBox'
-    if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\VirtualBox-4.3.12-r93733-MultiArch_amd64.msi" /norestart'), '', SW_HIDE,
-       ewWaitUntilTerminated, ResultCode) then
-    begin
-      // handle success if necessary; ResultCode contains the exit code
-      //MsgBox('vbox installed OK', mbInformation, MB_OK);
-    end
-    else begin
-      // handle failure if necessary; ResultCode contains the error code
-      MsgBox('vbox install failure', mbInformation, MB_OK);
-    end;
-    //restart := True;
+	WizardForm.FilenameLabel.Caption := 'installing VirtualBox'
+	if Exec(ExpandConstant('msiexec'), ExpandConstant('/qn /i "{app}\installers\virtualbox\virtualbox.msi" /norestart'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+	begin
+		// handle success if necessary; ResultCode contains the exit code
+		//MsgBox('virtualbox install OK', mbInformation, MB_OK);
+	end
+	else begin
+		// handle failure if necessary; ResultCode contains the error code
+		MsgBox('virtualbox install failure', mbInformation, MB_OK);
+	end;
+	//restart := True;
 end;
-
-
 
 procedure RunInstallMSYS();
 var
-  ResultCode: Integer;
+	ResultCode: Integer;
 begin
-    WizardForm.FilenameLabel.Caption := 'installing MSYS Git'
-    if Exec(ExpandConstant('{app}\Git-1.9.0-preview20140217.exe'), '/sp- /verysilent /norestart', '', SW_HIDE,
-       ewWaitUntilTerminated, ResultCode) then
-    begin
-      // handle success if necessary; ResultCode contains the exit code
-      //MsgBox('msys installed OK', mbInformation, MB_OK);
-    end
-    else begin
-      // handle failure if necessary; ResultCode contains the error code
-      MsgBox('msys install failure', mbInformation, MB_OK);
-    end;
+	WizardForm.FilenameLabel.Caption := 'installing MSYS Git'
+	if Exec(ExpandConstant('{app}\installers\msys-git\msys-git.exe'), '/sp- /verysilent /norestart', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+	begin
+		// handle success if necessary; ResultCode contains the exit code
+		//MsgBox('msys installed OK', mbInformation, MB_OK);
+	end
+	else begin
+		// handle failure if necessary; ResultCode contains the error code
+		MsgBox('msys install failure', mbInformation, MB_OK);
+	end;
 end;
 
 const

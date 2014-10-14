@@ -1,14 +1,15 @@
-#!sh
-clear
-# simplify by adding the program dir to the path
-B2DPATH=$(dirname $0)
-set PATH=%PATH%;$B2DPATH
+#!/bin/bash
+set -e
 
-echo "stopping..."
-boot2docker.exe stop
-echo "deleting..."
-boot2docker.exe delete
+# clear the MSYS MOTD
+clear
+
+cd "$(dirname "$BASH_SOURCE")"
+
+( set -x; ./boot2docker.exe stop ) || true
+
+( set -x; ./boot2docker.exe delete; rm -rf "$HOME/.boot2docker" ) || true
 
 echo
-echo "[Hit a key to exit]"
+echo '[Press any key to exit]'
 read
