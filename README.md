@@ -1,6 +1,6 @@
 # windows-installer
 
-Installation [instructions](http://docs.docker.io/installation/windows/) available on the Docker documentation site.
+Installation [instructions](https://docs.docker.com/installation/windows/) available on the Docker documentation site.
 
 ## What is included:
 
@@ -14,7 +14,7 @@ Installation [instructions](http://docs.docker.io/installation/windows/) availab
 ## Why InnoSetup
 
 I've chosen to make a simple installer using [innosetup](http://www.jrsoftware.org/)
-because that is what the [msysGit](http://git-scm.org) installer is built with.
+because that is what the [msysGit](http://git-scm.com/) installer is built with.
 
 (It also happens that I've used InnoSetup before, so I can make something faster.
 
