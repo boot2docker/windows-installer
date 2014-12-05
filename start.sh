@@ -22,6 +22,8 @@ echo 'starting...'
 ./boot2docker.exe start
 echo
 
+./boot2docker.exe ip
+
 echo 'connecting...'
 ./boot2docker.exe ssh
 echo
