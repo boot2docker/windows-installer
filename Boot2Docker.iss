@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Boot2Docker for Windows"
-#define MyAppVersion "1.4.1"
+#define MyAppVersion "1.5.0"
 #define MyAppPublisher "Docker Inc"
 #define MyAppURL "https://docker.com"
 #define MyAppContact "https://docs.docker.com"
@@ -12,7 +12,7 @@
 
 ; https://msysgit.github.io
 ; or https://github.com/msysgit/msysgit/releases/latest
-#define msysGit ".\msysGit\Git-1.9.4-preview20140929.exe"
+#define msysGit ".\msysGit\Git-1.9.5-preview20141217.exe"
 
 ; https://www.virtualbox.org/wiki/Downloads
 ; Then, run "VirtualBox-x.x.x-xxx-Win.exe --extract --path ."
