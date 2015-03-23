@@ -5,7 +5,7 @@ Installation [instructions](https://docs.docker.com/installation/windows/) avail
 ## What is included:
 
 - [msys-git 1.9.4](http://msysgit.github.io/) for tools like `OpenSSH` and `BASH`
-- [VirtualBox 4.3.18](https://www.virtualbox.org)
+- [VirtualBox 4.3.26](https://www.virtualbox.org)
 - [Boot2Docker-cli management tool 1.3.0](https://github.com/boot2docker/boot2docker-cli)
 - [Boot2Docker ISO 1.3.0](https://github.com/boot2docker/boot2docker)
 

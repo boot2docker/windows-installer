@@ -17,7 +17,7 @@
 ; https://www.virtualbox.org/wiki/Downloads
 ; Then, run "VirtualBox-x.x.x-xxx-Win.exe --extract --path ."
 #define virtualBoxCommon ".\VirtualBox\common.cab"
-#define virtualBoxMsi ".\VirtualBox\VirtualBox-4.3.20-r96997-MultiArch_amd64.msi"
+#define virtualBoxMsi ".\VirtualBox\VirtualBox-4.3.26-r98988-MultiArch_amd64.msi"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
