@@ -22,12 +22,14 @@ echo 'starting...'
 ./boot2docker.exe start
 echo
 
+echo 'IP address of docker VM:'
 ./boot2docker.exe ip
-
-echo 'connecting...'
-./boot2docker.exe ssh
 echo
 
+echo 'setting environment variables ...'
+./boot2docker.exe shellinit | sed  's,\\,\\\\,g' # eval swallows single backslashes in windows style path
+eval "$(./boot2docker.exe shellinit 2>/dev/null | sed  's,\\,\\\\,g')"
 echo
-echo '[Press any key to exit]'
-read
+
+cd
+exec "$BASH" --login -i
