@@ -2,13 +2,15 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Boot2Docker for Windows"
-#define MyAppVersion "1.5.0"
+#define MyAppVersion "1.6.0-rc1"
 #define MyAppPublisher "Docker Inc"
 #define MyAppURL "https://docker.com"
 #define MyAppContact "https://docs.docker.com"
 
 #define b2dIso ".\bundle\Boot2Docker\boot2docker.iso"
 #define b2dCli ".\bundle\Boot2Docker\boot2docker.exe"
+
+#define dockerCli ".\bundle\docker\docker.exe"
 
 #define msysGit ".\bundle\msysGit\Git.exe"
 
@@ -66,16 +68,20 @@ Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Tasks]
 Name: desktopicon; Description: "{cm:CreateDesktopIcon}"
-Name: modifypath; Description: "Add boot2docker.exe to &PATH"
+Name: modifypath; Description: "Add docker.exe/boot2docker.exe to &PATH"
 Name: rebootwindows; Description: "&Reboot Windows at the end of installation"; Flags: restart unchecked
 
 [Components]
+Name: "Docker"; Description: "Docker Client for Windows" ; Types: full upgrade
 Name: "Boot2Docker"; Description: "Boot2Docker management tool and ISO" ; Types: full upgrade
 Name: "VirtualBox"; Description: "VirtualBox"; Types: full
 Name: "MSYS"; Description: "MSYS-git UNIX tools"; Types: full
 
 [Files]
 Source: ".\boot2docker.ico"; DestDir: "{app}"; Flags: ignoreversion
+
+; Docker
+Source: "{#dockerCli}"; DestDir: "{app}"; Flags: ignoreversion; Components: "Docker"
 
 ; Boot2Docker
 Source: "{#b2dIso}"; DestDir: "{app}"; Flags: ignoreversion; Components: "Boot2Docker"
@@ -203,8 +209,8 @@ begin
 			begin
 				Wizardform.TypesCombo.ItemIndex := 2
 			end;
-			Wizardform.ComponentsList.Checked[1] := NeedToInstallVirtualBox();
-			Wizardform.ComponentsList.Checked[2] := NeedToInstallMSYS();
+			Wizardform.ComponentsList.Checked[2] := NeedToInstallVirtualBox();
+			Wizardform.ComponentsList.Checked[3] := NeedToInstallMSYS();
 		end;
 end;
 
