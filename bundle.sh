@@ -17,8 +17,8 @@ mkdir -p "bundle" && cd "bundle"
 (
 	mkdir -p "Boot2Docker" && cd "Boot2Docker"
 
-	curl -s -L -o boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v0.9.1/boot2docker.iso
-	curl -s -L -o boot2docker.exe https://github.com/boot2docker/boot2docker-cli/releases/download/v0.9.2/boot2docker-v0.9.2-windows-amd64.exe
+	curl -s -L -o boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v1.5.0/boot2docker.iso
+	curl -s -L -o boot2docker.exe https://github.com/boot2docker/boot2docker-cli/releases/download/v1.5.0/boot2docker-v1.5.0-windows-amd64.exe
 )
 (
 	mkdir -p "msysGit" && cd "msysGit"
