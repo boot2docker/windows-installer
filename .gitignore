@@ -1,6 +1,2 @@
 Output/**
-Boot2Docker/*.iso
-Boot2Docker/*.exe
-msysGit/**
-VirtualBox/**
-docker/*.exe
+bundle/**

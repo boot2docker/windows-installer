@@ -7,17 +7,13 @@
 #define MyAppURL "https://docker.com"
 #define MyAppContact "https://docs.docker.com"
 
-#define b2dIso ".\Boot2Docker\boot2docker.iso"
-#define b2dCli ".\Boot2Docker\boot2docker.exe"
+#define b2dIso ".\bundle\Boot2Docker\boot2docker.iso"
+#define b2dCli ".\bundle\Boot2Docker\boot2docker.exe"
 
-; https://msysgit.github.io
-; or https://github.com/msysgit/msysgit/releases/latest
-#define msysGit ".\msysGit\Git-1.9.5-preview20141217.exe"
+#define msysGit ".\bundle\msysGit\Git.exe"
 
-; https://www.virtualbox.org/wiki/Downloads
-; Then, run "VirtualBox-x.x.x-xxx-Win.exe --extract --path ."
-#define virtualBoxCommon ".\VirtualBox\common.cab"
-#define virtualBoxMsi ".\VirtualBox\VirtualBox-4.3.26-r98988-MultiArch_amd64.msi"
+#define virtualBoxCommon ".\bundle\VirtualBox\common.cab"
+#define virtualBoxMsi ".\bundle\VirtualBox\VirtualBox_amd64.msi"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
