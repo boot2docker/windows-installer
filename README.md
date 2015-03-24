@@ -19,3 +19,8 @@ because that is what the [msysGit](http://git-scm.com/) installer is built with.
 
 Making a simple Wix for the Boot2Docker-cli should be simple, and this can then be
 used in this all-in-one installer too.
+
+## Maintenance
+
+See `MAINTENANCE.md` for instructions on how to update, bundle and compile the
+Boot2Docker Windows Installer.
