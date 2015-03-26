@@ -4,12 +4,16 @@ set -e
 # Script to grab binaries that are going to be bundled with windows installer.
 # Note to maintainers: Update versions used below with newer releases
 
-boot2docker=1.5.0
+boot2dockerIso=1.5.0
+boot2dockerCli=1.5.0
 docker=1.6.0-rc1
-dockerBucket=test.docker.com
 vbox=4.3.26
 vboxRev=98988
 msysGit=1.9.5-preview20150319
+
+boot2dockerIsoSrc=boot2docker
+boot2dockerCliSrc=boot2docker
+dockerBucket=test.docker.com
 
 set -x
 rm -r bundle
@@ -27,8 +31,8 @@ cd bundle
 	mkdir -p Boot2Docker
 	cd Boot2Docker
 
-	curl -fsSL -o boot2docker.iso "https://github.com/boot2docker/boot2docker/releases/download/v${boot2docker}/boot2docker.iso"
-	curl -fsSL -o boot2docker.exe "https://github.com/boot2docker/boot2docker-cli/releases/download/v${boot2docker}/boot2docker-v${boot2docker}-windows-amd64.exe"
+	curl -fsSL -o boot2docker.iso "https://github.com/${boot2dockerIsoSrc}/boot2docker/releases/download/v${boot2dockerIso}/boot2docker.iso"
+	curl -fsSL -o boot2docker.exe "https://github.com/${boot2dockerCliSrc}/boot2docker-cli/releases/download/v${boot2dockerCli}/boot2docker-v${boot2dockerCli}-windows-amd64.exe"
 )
 
 (
