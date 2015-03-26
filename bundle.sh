@@ -20,22 +20,22 @@ cd bundle
 	mkdir -p docker
 	cd docker
 
-	curl -sSL -o docker.exe "https://${dockerBucket}/builds/Windows/x86_64/docker-${docker}.exe"
+	curl -fsSL -o docker.exe "https://${dockerBucket}/builds/Windows/x86_64/docker-${docker}.exe"
 )
 
 (
 	mkdir -p Boot2Docker
 	cd Boot2Docker
 
-	curl -sSL -o boot2docker.iso "https://github.com/boot2docker/boot2docker/releases/download/v${boot2docker}/boot2docker.iso"
-	curl -sSL -o boot2docker.exe "https://github.com/boot2docker/boot2docker-cli/releases/download/v${boot2docker}/boot2docker-v${boot2docker}-windows-amd64.exe"
+	curl -fsSL -o boot2docker.iso "https://github.com/boot2docker/boot2docker/releases/download/v${boot2docker}/boot2docker.iso"
+	curl -fsSL -o boot2docker.exe "https://github.com/boot2docker/boot2docker-cli/releases/download/v${boot2docker}/boot2docker-v${boot2docker}-windows-amd64.exe"
 )
 
 (
 	mkdir -p msysGit
 	cd msysGit
 
-	curl -sSL -o Git.exe "https://github.com/msysgit/msysgit/releases/download/Git-${msysGit}/Git-${msysGit}.exe"
+	curl -fsSL -o Git.exe "https://github.com/msysgit/msysgit/releases/download/Git-${msysGit}/Git-${msysGit}.exe"
 )
 
 (
@@ -43,7 +43,7 @@ cd bundle
 	cd VirtualBox
 
 	# http://www.virtualbox.org/manual/ch02.html
-	curl -sSL -o virtualbox.exe "http://download.virtualbox.org/virtualbox/${vbox}/VirtualBox-${vbox}-${vboxRev}-Win.exe"
+	curl -fsSL -o virtualbox.exe "http://download.virtualbox.org/virtualbox/${vbox}/VirtualBox-${vbox}-${vboxRev}-Win.exe"
 
 	virtualbox.exe -extract -silent -path .
 	rm virtualbox.exe # not neeeded after extraction
