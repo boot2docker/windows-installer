@@ -31,5 +31,7 @@ echo 'setting environment variables ...'
 eval "$(./boot2docker.exe shellinit 2>/dev/null | sed  's,\\,\\\\,g')"
 echo
 
+echo 'You can now use `docker` directly, or `boot2docker ssh` to log into the VM.'
+
 cd
 exec "$BASH" --login -i
