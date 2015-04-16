@@ -4,16 +4,16 @@ set -e
 # Script to grab binaries that are going to be bundled with windows installer.
 # Note to maintainers: Update versions used below with newer releases
 
-boot2dockerIso=1.5.0
-boot2dockerCli=1.5.0
-docker=1.6.0-rc1
+boot2dockerIso=1.6.0
+boot2dockerCli=1.6.0
+docker=1.6.0
 vbox=4.3.26
 vboxRev=98988
 msysGit=1.9.5-preview20150319
 
 boot2dockerIsoSrc=boot2docker
 boot2dockerCliSrc=boot2docker
-dockerBucket=test.docker.com
+dockerBucket=get.docker.com
 
 set -x
 rm -r bundle
