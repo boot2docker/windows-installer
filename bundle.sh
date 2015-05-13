@@ -7,8 +7,8 @@ set -e
 boot2dockerIso=1.6.1
 boot2dockerCli=1.6.1
 docker=1.6.1
-vbox=4.3.26
-vboxRev=98988
+vbox=4.3.28
+vboxRev=100309
 msysGit=1.9.5-preview20150319
 
 boot2dockerIsoSrc=boot2docker
