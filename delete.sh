@@ -4,6 +4,8 @@ set -e
 # clear the MSYS MOTD
 clear
 
+if [ "$HOME" == "" ]; then export HOME=$USERPROFILE; fi
+
 cd "$(dirname "$BASH_SOURCE")"
 
 ( set -x; ./boot2docker.exe stop ) || true
