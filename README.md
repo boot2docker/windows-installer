@@ -1,3 +1,7 @@
+# Deprecated
+
+This project (the boot2docker Windows Installer) is officially deprecated in favor of the new [Docker Toolbox](https://www.docker.com/toolbox).
+
 # windows-installer
 
 Installation [instructions](https://docs.docker.com/installation/windows/) available on the Docker documentation site.
