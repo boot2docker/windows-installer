@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# clear the MSYS MOTD
-clear
-
 cd "$(dirname "$BASH_SOURCE")"
 
 ISO="$HOME/.boot2docker/boot2docker.iso"
