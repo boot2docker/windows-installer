@@ -4,6 +4,8 @@ set -e
 # clear the MSYS MOTD
 clear
 
+if [ "$HOME" == "" ]; then export HOME=$USERPROFILE; fi
+
 cd "$(dirname "$BASH_SOURCE")"
 
 ISO="$HOME/.boot2docker/boot2docker.iso"

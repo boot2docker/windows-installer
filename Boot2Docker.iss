@@ -109,6 +109,16 @@ Name: "{group}\Delete Boot2Docker VM"; WorkingDir: "{app}"; Filename: "{app}\del
 [UninstallRun]
 Filename: "{app}\delete.sh"
 
+[UninstallDelete]
+Type: filesandordirs; Name: "{%HOME}\.boot2docker"
+Type: filesandordirs; Name: "{%USERPROFILE}\.boot2docker"
+
+Type: filesandordirs; Name: "{%HOME}\VirtualBox VMs\boot2docker-vm"
+Type: filesandordirs; Name: "{%USERPROFILE}\VirtualBox VMs\boot2docker-vm"
+
+Type: files; Name: "{%HOME}\.ssh\id_boot2docker.pub"
+Type: files; Name: "{%USERPROFILE}\.ssh\id_boot2docker.pub"
+
 [Code]
 var
 	restart: boolean;
